@@ -103,7 +103,7 @@ class _CustomDateFieldState extends State<CustomDateField> {
                         height: 1,
                       ),
                       SizedBox(
-                        height: 250,
+                        height: 220,
                         width: double.infinity,
                         child: CupertinoDatePicker(
                           minimumDate: widget.firstDate,

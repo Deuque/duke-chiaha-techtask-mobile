@@ -11,4 +11,21 @@ class IngredientsCubit extends Cubit<IngredientsState> {
 
   IngredientsCubit({required this.repository, required DateTime lunchDate})
       : super(IngredientsState.initial(lunchDate));
+
+  void fetchIngredients() async {
+    emit(state.copyWith(fetchIngredientsStatus: LoadStatus.loading));
+    final response = await repository.getIngredients();
+
+    if (response.error != null) {
+      emit(state.copyWith(
+        fetchIngredientsStatus: LoadStatus.error,
+        message: response.error,
+      ));
+    } else if (response.data != null) {
+      emit(state.copyWith(
+        fetchIngredientsStatus: LoadStatus.success,
+        ingredients: response.data,
+      ));
+    }
+  }
 }

@@ -14,13 +14,13 @@ class IngredientsState extends Equatable {
   });
 
   IngredientsState copyWith({
-    LoadStatus? fetchIngredients,
+    LoadStatus? fetchIngredientsStatus,
     String? message,
     List<IngredientModel>? ingredients,
     DateTime? lunchDate,
   }) =>
       IngredientsState(
-        fetchIngredientsStatus: fetchIngredients ?? this.fetchIngredientsStatus,
+        fetchIngredientsStatus: fetchIngredientsStatus ?? this.fetchIngredientsStatus,
         message: message ?? this.message,
         ingredients: ingredients ?? this.ingredients,
         lunchDate: lunchDate ?? this.lunchDate,

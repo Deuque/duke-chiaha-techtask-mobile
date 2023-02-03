@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -5,6 +7,8 @@ import 'package:tech_task/bloc/ingredients/ingredients_cubit.dart';
 import 'package:tech_task/models/ingredient_model.dart';
 import 'package:tech_task/repository/app_repository.dart';
 import 'package:tech_task/routes.dart';
+import 'package:tech_task/util/enums.dart';
+import 'package:tech_task/widgets/custom_error_widget.dart';
 
 import '../widgets/ingredient_item_widget.dart';
 
@@ -34,70 +38,119 @@ class _View extends StatefulWidget {
 }
 
 class _ViewState extends State<_View> {
-  final _selectedIngredients = [];
+  final _selectedIngredients = <IngredientModel>[];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchIngredients();
+  }
+
+  void _fetchIngredients() {
+    _selectedIngredients.clear();
+    context.read<IngredientsCubit>().fetchIngredients();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<IngredientsCubit, IngredientsState>(
-      builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 65,
-            title: Column(
-              children: [
-                Text('Ingredients'),
-                const SizedBox(
-                  height: 3,
-                ),
-                Text(
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 65,
+        title: Column(
+          crossAxisAlignment: Platform.isAndroid ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+          children: [
+            Text('Ingredients'),
+            const SizedBox(
+              height: 3,
+            ),
+            BlocBuilder<IngredientsCubit, IngredientsState>(
+              builder: (context, state) {
+                return Text(
                   DateFormat('dd MMM, yyyy').format(state.lunchDate),
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium
                       ?.copyWith(color: Colors.white),
-                ),
-              ],
+                );
+              },
             ),
-          ),
-          body: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.only(top: 15, bottom: 40),
-                    itemBuilder: (_, i) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 7),
-                        child: IngredientItemWidget(
-                          model: IngredientModel(
-                            title: 'Ingredient$i',
-                            useBy: i % 4 == 0
-                                ? DateTime.now().subtract(Duration(days: 2))
-                                : DateTime.now().add(Duration(days: 2)),
-                          ),
-                          lunchDate: DateTime.now(),
-                          onSelected: (_) => setState(() {
-                            if (_selectedIngredients.contains(i)) {
-                              _selectedIngredients.remove(i);
-                            } else {
-                              _selectedIngredients.add(i);
-                            }
-                          }),
-                          selected: _selectedIngredients.contains(i),
-                        ),
-                      );
-                    },
-                    itemCount: 10,
+          ],
+        ),
+      ),
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () async => _fetchIngredients(),
+          child: BlocBuilder<IngredientsCubit, IngredientsState>(
+            builder: (context, state) {
+              if (state.fetchIngredientsStatus == LoadStatus.loading) {
+                return Center(child: CircularProgressIndicator.adaptive());
+              }
+              if (state.fetchIngredientsStatus == LoadStatus.error) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: CustomErrorWidget(
+                      onRefresh: _fetchIngredients,
+                      message: state.message,
+                    ),
                   ),
-                ),
-                _getRecipesButton(),
-              ],
-            ),
+                );
+              }
+              if (state.fetchIngredientsStatus == LoadStatus.success) {
+                if (state.ingredients.isEmpty) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: CustomErrorWidget(
+                        onRefresh: _fetchIngredients,
+                        message: 'No Ingredients found',
+                      ),
+                    ),
+                  );
+                }
+                return _ingredientsListWidget(
+                    state.ingredients, state.lunchDate);
+              }
+              return const SizedBox.shrink();
+            },
           ),
-        );
-      },
+        ),
+      ),
+    );
+  }
+
+  Widget _ingredientsListWidget(
+      List<IngredientModel> ingredients, DateTime lunchDate) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.only(top: 15, bottom: 40),
+            itemBuilder: (_, i) {
+              final ingredient = ingredients[i];
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
+                child: IngredientItemWidget(
+                  model: ingredient,
+                  lunchDate: lunchDate,
+                  onSelected: (_) => setState(() {
+                    if (_selectedIngredients.contains(ingredient)) {
+                      _selectedIngredients.remove(ingredient);
+                    } else {
+                      _selectedIngredients.add(ingredient);
+                    }
+                  }),
+                  selected: _selectedIngredients.contains(ingredient),
+                ),
+              );
+            },
+            itemCount: ingredients.length,
+          ),
+        ),
+        _getRecipesButton(),
+      ],
     );
   }
 
@@ -116,7 +169,7 @@ class _ViewState extends State<_View> {
                 Navigator.pushNamed(
                   context,
                   Routes.recipes,
-                  arguments: ["Cheese", "Bread"],
+                  arguments: _selectedIngredients.map((e) => e.title).toList(),
                 );
               },
         child: Row(

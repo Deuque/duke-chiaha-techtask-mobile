@@ -6,7 +6,8 @@ import 'package:tech_task/routes.dart';
 
 void main() {
   final repository = AppRepositoryImpl(
-      'https://lb7u7svcm5.execute-api.ap-southeast-1.amazonaws.com/dev');
+    'https://lb7u7svcm5.execute-api.ap-southeast-1.amazonaws.com/dev',
+  );
   runApp(MyApp(repository: repository));
 }
 
@@ -24,6 +25,16 @@ class MyApp extends StatelessWidget {
         themeMode: ThemeMode.light,
         theme: ThemeData(
           primarySwatch: Colors.teal,
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                textStyle: const TextStyle(
+                  fontSize: 16,
+                ),
+                fixedSize: Size(200, 45)),
+          ),
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(

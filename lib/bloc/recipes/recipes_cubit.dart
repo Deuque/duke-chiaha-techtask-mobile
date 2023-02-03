@@ -11,4 +11,21 @@ class RecipesCubit extends Cubit<RecipesState> {
 
   RecipesCubit({required this.repository, required List<String> ingredients})
       : super(RecipesState.initial(ingredients));
+
+  void fetchRecipes() async {
+    emit(state.copyWith(fetchRecipesStatus: LoadStatus.loading));
+    final response = await repository.getRecipes(state.ingredients);
+
+    if (response.error != null) {
+      emit(state.copyWith(
+        fetchRecipesStatus: LoadStatus.error,
+        message: response.error,
+      ));
+    } else if (response.data != null) {
+      emit(state.copyWith(
+        fetchRecipesStatus: LoadStatus.success,
+        recipes: response.data,
+      ));
+    }
+  }
 }

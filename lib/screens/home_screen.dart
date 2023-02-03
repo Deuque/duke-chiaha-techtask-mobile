@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tech_task/routes.dart';
@@ -23,13 +24,15 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
-    _scaleAnimation = Tween<double>(begin: 200, end: 120).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.decelerate),
-    );
+    final curvedAnimation =
+        CurvedAnimation(parent: _animationController, curve: Curves.decelerate);
+    _scaleAnimation =
+        Tween<double>(begin: 200, end: 120).animate(curvedAnimation);
     _positionAnimation =
         Tween<Offset>(begin: Offset(0.0, 0.5), end: Offset(0, 0)).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.decelerate),
+      curvedAnimation,
     );
+
     Future.delayed(
       Duration(milliseconds: 900),
       () => _animationController.forward(),
@@ -42,57 +45,61 @@ class _HomeScreenState extends State<HomeScreen>
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
       },
-      child: Scaffold(
-        body: SafeArea(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: AnimatedBuilder(
-                  animation: _animationController,
-                  builder: (context, value) {
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SlideTransition(
-                          position: _positionAnimation,
-                          child: SvgPicture.asset(
-                            'assets/images/cooking.svg',
-                            height: _scaleAnimation.value,
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: Scaffold(
+          body: SafeArea(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: AnimatedBuilder(
+                    animation: _animationController,
+                    builder: (context, value) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SlideTransition(
+                            position: _positionAnimation,
+                            child: SvgPicture.asset(
+                              'assets/images/cooking.svg',
+                              height: _scaleAnimation.value,
+                            ),
                           ),
-                        ),
-                        AnimatedOpacity(
-                          opacity: _animationController.isCompleted ? 1 : 0,
-                          curve: Curves.decelerate,
-                          duration: const Duration(milliseconds: 400),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              const SizedBox(height: 40),
-                              CustomDateField(
-                                label: 'Select a lunch date',
-                                firstDate: DateTime(2000),
-                                initialDate: _selectedDate,
-                                dateFormat: DateFormat('dd MMM, yyyy'),
-                                onDateSelected: (date) => _selectedDate = date,
-                              ),
-                              const SizedBox(height: 15),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    Routes.ingredients,
-                                    arguments: _selectedDate,
-                                  );
-                                },
-                                child: Text('Continue'),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    );
-                  }),
+                          AnimatedOpacity(
+                            opacity: _animationController.isCompleted ? 1 : 0,
+                            curve: Curves.decelerate,
+                            duration: const Duration(milliseconds: 400),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                const SizedBox(height: 40),
+                                CustomDateField(
+                                  label: 'Select a lunch date',
+                                  firstDate: DateTime(2000),
+                                  initialDate: _selectedDate,
+                                  dateFormat: DateFormat('dd MMM, yyyy'),
+                                  onDateSelected: (date) =>
+                                      _selectedDate = date,
+                                ),
+                                const SizedBox(height: 15),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      Routes.ingredients,
+                                      arguments: _selectedDate,
+                                    );
+                                  },
+                                  child: Text('Get Ingredients'),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      );
+                    }),
+              ),
             ),
           ),
         ),

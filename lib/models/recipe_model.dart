@@ -6,7 +6,7 @@ class RecipeModel extends Equatable {
 
   RecipeModel({required this.title, required this.ingredients});
 
-  factory RecipeModel.fromJson(Map<String, dynamic> json) => RecipeModel(
+  factory RecipeModel.fromJson(Map json) => RecipeModel(
         title: json['title'],
         ingredients: List<String>.from(json['ingredients'] ?? []),
       );

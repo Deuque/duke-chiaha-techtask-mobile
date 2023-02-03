@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tech_task/models/recipe_model.dart';
 
-class RecipetItemWidget extends StatelessWidget {
+class RecipeItemWidget extends StatelessWidget {
   final RecipeModel model;
 
-  const RecipetItemWidget({
+  const RecipeItemWidget({
     Key? key,
     required this.model,
   }) : super(key: key);
@@ -17,10 +17,11 @@ class RecipetItemWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(5),
         boxShadow: [
           BoxShadow(
-              color: Colors.grey.withOpacity(.1),
-              offset: Offset(0, 2),
-              spreadRadius: 4,
-              blurRadius: 12)
+            color: Colors.grey.withOpacity(.1),
+            offset: Offset(0, 2),
+            spreadRadius: 4,
+            blurRadius: 12,
+          )
         ],
       ),
       child: ExpansionTile(
@@ -35,7 +36,7 @@ class RecipetItemWidget extends StatelessWidget {
                 children: model.ingredients
                     .map(
                       (e) => Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
+                        padding: const EdgeInsets.only(bottom: 10.0),
                         child: Row(
                           children: [
                             Icon(
@@ -55,8 +56,6 @@ class RecipetItemWidget extends StatelessWidget {
             ),
           )
         ],
-        // subtitle: Text(dateFormat.format(model.useBy)),
-        // trailing: isSelectable ? _checkBox() : null,
       ),
     );
   }

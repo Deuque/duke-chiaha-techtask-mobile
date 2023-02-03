@@ -40,7 +40,7 @@ class IngredientItemWidget extends StatelessWidget {
               ],
       ),
       child: ListTile(
-        onTap: () => onSelected(model),
+        onTap: isSelectable ? () => onSelected(model) : null,
         leading: Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: SvgPicture.asset(

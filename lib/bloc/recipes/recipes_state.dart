@@ -1,34 +1,33 @@
 part of 'recipes_cubit.dart';
 
 class RecipesState extends Equatable {
-  final LoadStatus fetchRecipientsStatus;
+  final LoadStatus fetchRecipesStatus;
   final String message;
   final List<RecipeModel> recipes;
   final List<String> ingredients;
 
   RecipesState({
-    required this.fetchRecipientsStatus,
+    required this.fetchRecipesStatus,
     required this.message,
     required this.recipes,
     required this.ingredients,
   });
 
   RecipesState copyWith({
-    LoadStatus? fetchRecipientsStatus,
+    LoadStatus? fetchRecipesStatus,
     String? message,
     List<RecipeModel>? recipes,
     List<String>? ingredients,
   }) =>
       RecipesState(
-        fetchRecipientsStatus:
-            fetchRecipientsStatus ?? this.fetchRecipientsStatus,
+        fetchRecipesStatus: fetchRecipesStatus ?? this.fetchRecipesStatus,
         message: message ?? this.message,
         recipes: recipes ?? this.recipes,
         ingredients: ingredients ?? this.ingredients,
       );
 
   static RecipesState initial(List<String> ingredients) => RecipesState(
-        fetchRecipientsStatus: LoadStatus.initial,
+        fetchRecipesStatus: LoadStatus.initial,
         message: '',
         recipes: [],
         ingredients: ingredients,
@@ -36,5 +35,5 @@ class RecipesState extends Equatable {
 
   @override
   List<Object?> get props =>
-      [fetchRecipientsStatus, message, recipes, ingredients];
+      [fetchRecipesStatus, message, recipes, ingredients];
 }

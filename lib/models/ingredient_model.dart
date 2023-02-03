@@ -6,8 +6,12 @@ class IngredientModel extends Equatable {
 
   IngredientModel({required this.title, required this.useBy});
 
-  factory IngredientModel.fromJson(Map<String, dynamic> json) =>
-      IngredientModel(title: json['title'], useBy: json['user_by']);
+  factory IngredientModel.fromJson(Map json) => IngredientModel(
+        title: json['title'],
+        useBy: json['use-by'] == null
+            ? DateTime.now()
+            : DateTime.parse(json['use-by']),
+      );
 
   @override
   List<Object?> get props => [title, useBy];
