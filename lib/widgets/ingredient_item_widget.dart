@@ -25,8 +25,7 @@ class IngredientItemWidget extends StatelessWidget {
     final isSelectable = dmyDate(model.useBy) == dmyDate(lunchDate) ||
         dmyDate(model.useBy).isAfter(dmyDate(lunchDate));
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: !isSelectable ? Colors.transparent : Colors.white,
         borderRadius: BorderRadius.circular(5),

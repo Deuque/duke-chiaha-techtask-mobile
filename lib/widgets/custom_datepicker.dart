@@ -47,6 +47,7 @@ class _CustomDateFieldState extends State<CustomDateField> {
     String text = '';
     if (dateTime != null) {
       text = widget.dateFormat.format(dateTime);
+      widget.onDateSelected(dateTime);
     }
     _controller.text = text;
     setState(() {});

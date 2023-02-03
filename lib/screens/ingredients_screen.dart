@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:tech_task/bloc/ingredients/ingredients_cubit.dart';
 import 'package:tech_task/models/ingredient_model.dart';
 import 'package:tech_task/repository/app_repository.dart';
+import 'package:tech_task/routes.dart';
 
 import '../widgets/ingredient_item_widget.dart';
 
@@ -36,43 +38,66 @@ class _ViewState extends State<_View> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Ingredients'),
-      ),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.only(top: 15, bottom: 40),
-                itemBuilder: (_, i) {
-                  return IngredientItemWidget(
-                    model: IngredientModel(
-                      title: 'Ingredient$i',
-                      useBy: i % 4 == 0
-                          ? DateTime.now().subtract(Duration(days: 2))
-                          : DateTime.now().add(Duration(days: 2)),
-                    ),
-                    lunchDate: DateTime.now(),
-                    onSelected: (_) => setState(() {
-                      if (_selectedIngredients.contains(i)) {
-                        _selectedIngredients.remove(i);
-                      } else {
-                        _selectedIngredients.add(i);
-                      }
-                    }),
-                    selected: _selectedIngredients.contains(i),
-                  );
-                },
-                itemCount: 10,
-              ),
+    return BlocBuilder<IngredientsCubit, IngredientsState>(
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 65,
+            title: Column(
+              children: [
+                Text('Ingredients'),
+                const SizedBox(
+                  height: 3,
+                ),
+                Text(
+                  DateFormat('dd MMM, yyyy').format(state.lunchDate),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(color: Colors.white),
+                ),
+              ],
             ),
-            _getRecipesButton(),
-          ],
-        ),
-      ),
+          ),
+          body: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.only(top: 15, bottom: 40),
+                    itemBuilder: (_, i) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 7),
+                        child: IngredientItemWidget(
+                          model: IngredientModel(
+                            title: 'Ingredient$i',
+                            useBy: i % 4 == 0
+                                ? DateTime.now().subtract(Duration(days: 2))
+                                : DateTime.now().add(Duration(days: 2)),
+                          ),
+                          lunchDate: DateTime.now(),
+                          onSelected: (_) => setState(() {
+                            if (_selectedIngredients.contains(i)) {
+                              _selectedIngredients.remove(i);
+                            } else {
+                              _selectedIngredients.add(i);
+                            }
+                          }),
+                          selected: _selectedIngredients.contains(i),
+                        ),
+                      );
+                    },
+                    itemCount: 10,
+                  ),
+                ),
+                _getRecipesButton(),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -85,7 +110,15 @@ class _ViewState extends State<_View> {
         right: 20,
       ),
       child: ElevatedButton(
-        onPressed: _selectedIngredients.isEmpty ? null : () {},
+        onPressed: _selectedIngredients.isEmpty
+            ? null
+            : () {
+                Navigator.pushNamed(
+                  context,
+                  Routes.recipes,
+                  arguments: ["Cheese", "Bread"],
+                );
+              },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

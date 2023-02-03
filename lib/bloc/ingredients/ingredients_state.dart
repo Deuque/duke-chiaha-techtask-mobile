@@ -1,26 +1,26 @@
 part of 'ingredients_cubit.dart';
 
 class IngredientsState extends Equatable {
-  final LoadState fetchIngredients;
+  final LoadStatus fetchIngredientsStatus;
   final String message;
   final List<IngredientModel> ingredients;
   final DateTime lunchDate;
 
   IngredientsState({
-    required this.fetchIngredients,
+    required this.fetchIngredientsStatus,
     required this.message,
     required this.ingredients,
     required this.lunchDate,
   });
 
   IngredientsState copyWith({
-    LoadState? fetchIngredients,
+    LoadStatus? fetchIngredients,
     String? message,
     List<IngredientModel>? ingredients,
     DateTime? lunchDate,
   }) =>
       IngredientsState(
-        fetchIngredients: fetchIngredients ?? this.fetchIngredients,
+        fetchIngredientsStatus: fetchIngredients ?? this.fetchIngredientsStatus,
         message: message ?? this.message,
         ingredients: ingredients ?? this.ingredients,
         lunchDate: lunchDate ?? this.lunchDate,
@@ -28,7 +28,7 @@ class IngredientsState extends Equatable {
 
   static IngredientsState initial(DateTime lunchDate) =>
       IngredientsState(
-        fetchIngredients: LoadState.initial,
+        fetchIngredientsStatus: LoadStatus.initial,
         message: '',
         ingredients: [],
         lunchDate: lunchDate,
@@ -36,5 +36,5 @@ class IngredientsState extends Equatable {
 
   @override
   List<Object?> get props =>
-      [fetchIngredients, message, ingredients, lunchDate];
+      [fetchIngredientsStatus, message, ingredients, lunchDate];
 }

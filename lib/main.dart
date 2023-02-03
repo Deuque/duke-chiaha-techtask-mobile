@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       create: (context) => repository,
       child: MaterialApp(
         title: 'Flutter Demo',
+        themeMode: ThemeMode.light,
         theme: ThemeData(
           primarySwatch: Colors.teal,
           elevatedButtonTheme: ElevatedButtonThemeData(
