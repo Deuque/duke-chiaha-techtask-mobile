@@ -5,6 +5,10 @@ import 'package:intl/intl.dart';
 import 'package:tech_task/routes.dart';
 import 'package:tech_task/widgets/custom_datepicker.dart';
 
+class HomeScreenKeys {
+  static const getIngredientsButton = Key('getIngredientsButton');
+}
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -84,6 +88,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 ),
                                 const SizedBox(height: 15),
                                 ElevatedButton(
+                                  key: HomeScreenKeys.getIngredientsButton,
                                   onPressed: () {
                                     Navigator.pushNamed(
                                       context,

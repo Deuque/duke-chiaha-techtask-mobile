@@ -9,6 +9,10 @@ import 'package:tech_task/util/enums.dart';
 import 'package:tech_task/widgets/custom_error_widget.dart';
 import 'package:tech_task/widgets/recipe_item_widget.dart';
 
+class RecipesScreenKeys {
+  static const recipesList = Key('recipesList');
+}
+
 class RecipesScreen extends StatelessWidget {
   const RecipesScreen({Key? key}) : super(key: key);
 
@@ -116,6 +120,7 @@ class _ViewState extends State<_View> {
 
   Widget _recipesListWidget(List<RecipeModel> recipes) {
     return ListView.builder(
+      key: RecipesScreenKeys.recipesList,
       padding: const EdgeInsets.only(top: 15, bottom: 40),
       itemBuilder: (_, i) {
         final recipe = recipes[i];

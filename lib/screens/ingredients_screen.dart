@@ -12,6 +12,12 @@ import 'package:tech_task/widgets/custom_error_widget.dart';
 
 import '../widgets/ingredient_item_widget.dart';
 
+class IngredientsScreenKeys {
+  static const getRecipesButton = Key('getRecipesButton');
+  static const ingredientsList = Key('ingredientsList');
+  static const selectionCount = Key('selectionCount');
+}
+
 class IngredientsScreen extends StatelessWidget {
   const IngredientsScreen({Key? key}) : super(key: key);
 
@@ -57,7 +63,9 @@ class _ViewState extends State<_View> {
       appBar: AppBar(
         toolbarHeight: 65,
         title: Column(
-          crossAxisAlignment: Platform.isAndroid ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+          crossAxisAlignment: Platform.isAndroid
+              ? CrossAxisAlignment.start
+              : CrossAxisAlignment.center,
           children: [
             Text('Ingredients'),
             const SizedBox(
@@ -126,6 +134,7 @@ class _ViewState extends State<_View> {
       children: [
         Expanded(
           child: ListView.builder(
+            key: IngredientsScreenKeys.ingredientsList,
             padding: const EdgeInsets.only(top: 15, bottom: 40),
             itemBuilder: (_, i) {
               final ingredient = ingredients[i];
@@ -163,6 +172,7 @@ class _ViewState extends State<_View> {
         right: 20,
       ),
       child: ElevatedButton(
+        key: IngredientsScreenKeys.getRecipesButton,
         onPressed: _selectedIngredients.isEmpty
             ? null
             : () {
@@ -180,6 +190,7 @@ class _ViewState extends State<_View> {
               Padding(
                 padding: const EdgeInsets.only(left: 10.0),
                 child: CircleAvatar(
+                  key: IngredientsScreenKeys.selectionCount,
                   radius: 11,
                   backgroundColor: Colors.white,
                   child: Text(
