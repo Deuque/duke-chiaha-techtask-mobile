@@ -8,7 +8,7 @@ __Language :__ English | [Bahasa Indonesia](README_ID.md)
 </p>
 
 ## Usage Instructions
-1. To run the app, get Flutter sdk up and running, and proceed to run the app on either an emulator or a simulator
+1. To run the app, get Flutter sdk up and running, clone this repository and proceed to run the app on either an emulator or a simulator
 2. Given that the ingredients data returned from the api has an earliest 'use-by' date of year 2020, you might want to select a lunch date within or before that period.
 3. To run tests, <br/>
     a. Head over to the 'Actions' tab in this repository and see the available ci workflow <br/>
