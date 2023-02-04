@@ -1,35 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:tech_task/util/date_helper.dart';
 
 import '../models/ingredient_model.dart';
 
 class IngredientItemWidget extends StatelessWidget {
   final IngredientModel model;
-  final DateTime lunchDate;
   final ValueChanged<IngredientModel> onSelected;
-  final bool selected;
+  final bool hasExpired;
+  final bool isSelected;
 
   const IngredientItemWidget({
     Key? key,
     required this.model,
-    required this.lunchDate,
     required this.onSelected,
-    required this.selected,
+    required this.hasExpired,
+    required this.isSelected,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('dd MMM, yyyy');
-    final isSelectable = dmyDate(model.useBy) == dmyDate(lunchDate) ||
-        dmyDate(model.useBy).isAfter(dmyDate(lunchDate));
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: !isSelectable ? Colors.transparent : Colors.white,
+        color: hasExpired ? Colors.transparent : Colors.white,
         borderRadius: BorderRadius.circular(5),
-        boxShadow: !isSelectable
+        boxShadow: hasExpired
             ? null
             : [
                 BoxShadow(
@@ -40,7 +37,7 @@ class IngredientItemWidget extends StatelessWidget {
               ],
       ),
       child: ListTile(
-        onTap: isSelectable ? () => onSelected(model) : null,
+        onTap: hasExpired ? null : () => onSelected(model),
         leading: Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: SvgPicture.asset(
@@ -52,7 +49,7 @@ class IngredientItemWidget extends StatelessWidget {
         horizontalTitleGap: 0,
         title: Text(model.title),
         subtitle: Text(dateFormat.format(model.useBy)),
-        trailing: isSelectable ? _checkBox() : null,
+        trailing: hasExpired ?  null : _checkBox(),
       ),
     );
   }
@@ -64,14 +61,14 @@ class IngredientItemWidget extends StatelessWidget {
       curve: Curves.decelerate,
       duration: Duration(milliseconds: 300),
       decoration: BoxDecoration(
-        color: selected ? Colors.deepOrangeAccent : null,
+        color: isSelected ? Colors.deepOrangeAccent : null,
         borderRadius: BorderRadius.circular(5),
         border: Border.all(
-          color: selected ? Colors.transparent : Colors.grey.withOpacity(.4),
+          color: isSelected ? Colors.transparent : Colors.grey.withOpacity(.4),
           width: 2,
         ),
       ),
-      child: selected
+      child: isSelected
           ? SvgPicture.asset(
               'assets/images/check.svg',
               colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),

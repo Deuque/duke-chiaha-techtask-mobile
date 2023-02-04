@@ -7,6 +7,7 @@ import 'package:tech_task/bloc/ingredients/ingredients_cubit.dart';
 import 'package:tech_task/models/ingredient_model.dart';
 import 'package:tech_task/repository/app_repository.dart';
 import 'package:tech_task/routes.dart';
+import 'package:tech_task/util/date_helper.dart';
 import 'package:tech_task/util/enums.dart';
 import 'package:tech_task/widgets/custom_error_widget.dart';
 
@@ -143,7 +144,6 @@ class _ViewState extends State<_View> {
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
                 child: IngredientItemWidget(
                   model: ingredient,
-                  lunchDate: lunchDate,
                   onSelected: (_) => setState(() {
                     if (_selectedIngredients.contains(ingredient)) {
                       _selectedIngredients.remove(ingredient);
@@ -151,7 +151,9 @@ class _ViewState extends State<_View> {
                       _selectedIngredients.add(ingredient);
                     }
                   }),
-                  selected: _selectedIngredients.contains(ingredient),
+                  hasExpired:
+                      dmyDate(lunchDate).isAfter(dmyDate(ingredient.useBy)),
+                  isSelected: _selectedIngredients.contains(ingredient),
                 ),
               );
             },
