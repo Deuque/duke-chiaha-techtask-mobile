@@ -3,8 +3,8 @@ __Language :__ English | [Bahasa Indonesia](README_ID.md)
 ## Submission Preview
 
 <p float="left">
-  <img src="assets/preview/ios.gif" height="400"/>
-  <img src="assets/preview/android.gif" height="400"/>
+  <img src="assets/preview/ios.gif" height="500"/>
+  <img src="assets/preview/android.gif" height="500"/>
 </p>
 
 ## Usage Instructions
