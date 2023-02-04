@@ -1,5 +1,18 @@
 __Language :__ English | [Bahasa Indonesia](README_ID.md)
 
+## Submission Preview
+
+<p float="left">
+  <img src="assets/preview/ios.gif" height="400"/>
+  <img src="assets/preview/android.gif" height="400"/>
+</p>
+
+## Usage Instructions
+1. To run the app, get Flutter sdk up and running, and proceed to run the app on either an emulator or simulator
+2. Given that the ingredients data returned from the api has an earliest date of year 2020, you might want to select a lunch date within or before that    period.
+3. To run tests, head over to the test folder in the root of the app and run any tests you like
+
+
 # Mobile Technical Task
 Apps for Lunch Recipes Suggestion
 
