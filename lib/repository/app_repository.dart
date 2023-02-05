@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:tech_task/models/ingredient_model.dart';
 import 'package:tech_task/models/recipe_model.dart';
 
@@ -7,7 +8,7 @@ abstract class AppRepository {
   Future<BaseResponse<List<RecipeModel>>> getRecipes(List<String> ingredients);
 }
 
-class BaseResponse<T> {
+class BaseResponse<T> extends Equatable {
   final String? error;
   final T? data;
 
@@ -18,4 +19,7 @@ class BaseResponse<T> {
   BaseResponse.withData(T data)
       : this.data = data,
         this.error = null;
+
+  @override
+  List<Object?> get props => [error, data];
 }

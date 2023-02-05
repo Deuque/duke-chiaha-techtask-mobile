@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tech_task/repository/app_repository.dart';
 import 'package:tech_task/repository/app_repository_impl.dart';
 import 'package:tech_task/routes.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   final repository = AppRepositoryImpl(
-    'https://lb7u7svcm5.execute-api.ap-southeast-1.amazonaws.com/dev',
+    baseUrl: 'https://lb7u7svcm5.execute-api.ap-southeast-1.amazonaws.com/dev',
+    client: http.Client(),
   );
   runApp(MyApp(repository: repository));
 }

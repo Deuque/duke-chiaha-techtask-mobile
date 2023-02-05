@@ -9,17 +9,27 @@ class AppRepositoryImpl extends AppRepository {
   final String baseUrl;
   final http.Client client;
 
-  AppRepositoryImpl(this.baseUrl) : client = http.Client();
+  AppRepositoryImpl({required this.baseUrl, required this.client});
+
+  String get ingredientsEndpoint => '$baseUrl/ingredients';
+
+  String recipesEndpoint(List<String> ingredients) =>
+      '$baseUrl/recipes?ingredients=${ingredients.join(',')}';
+
+  final invalidResponseError = 'Invalid Response';
 
   @override
   Future<BaseResponse<List<IngredientModel>>> getIngredients() async {
     try {
-      final url = Uri.parse('$baseUrl/ingredients');
+      final url = Uri.parse(ingredientsEndpoint);
       final response = await client.get(url);
       if (response.statusCode != 200) {
         throw response.body;
       }
       final data = jsonDecode(response.body);
+      if (data is! List) {
+        throw invalidResponseError;
+      }
       final ingredients =
           List<Map>.from(data).map(IngredientModel.fromJson).toList();
       return BaseResponse.withData(ingredients);
@@ -32,13 +42,15 @@ class AppRepositoryImpl extends AppRepository {
   Future<BaseResponse<List<RecipeModel>>> getRecipes(
       List<String> ingredients) async {
     try {
-      final url =
-          Uri.parse('$baseUrl/recipes?ingredients=${ingredients.join(',')}');
+      final url = Uri.parse(recipesEndpoint(ingredients));
       final response = await client.get(url);
       if (response.statusCode != 200) {
         throw response.body;
       }
       final data = jsonDecode(response.body);
+      if (data is! List) {
+        throw invalidResponseError;
+      }
       final recipes = List<Map>.from(data).map(RecipeModel.fromJson).toList();
       return BaseResponse.withData(recipes);
     } catch (e) {
